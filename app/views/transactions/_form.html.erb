@@ -1,3 +1,8 @@
+<%= form_tag(multipart: true) do %>
+  <%= file_field_tag :file %>
+  <%= submit_tag( "Import CSV" ) %>
+<% end %>
+
 <%= form_with(model: transaction, local: true) do |form| %>
   <% if transaction.errors.any? %>
     <div id="error_explanation">

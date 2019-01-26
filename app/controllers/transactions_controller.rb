@@ -2,13 +2,11 @@ class TransactionsController < ApplicationController
   before_action :set_transaction, only: [:show, :edit, :update, :destroy]
 
   # GET /transactions
-  # GET /transactions.json
   def index
     @transactions = Transaction.all
   end
 
   # GET /transactions/1
-  # GET /transactions/1.json
   def show
   end
 
@@ -22,23 +20,30 @@ class TransactionsController < ApplicationController
   end
 
   # POST /transactions
-  # POST /transactions.json
   def create
-    @transaction = Transaction.new(transaction_params)
+    if bulk_upload?
+      svc = TransactionImportService.new(params[:file].path)
+      if svc.valid_file?
+        svc.data.each do |transaction|
 
-    respond_to do |format|
-      if @transaction.save
-        format.html { redirect_to @transaction, notice: 'Transaction was successfully created.' }
-        format.json { render :show, status: :created, location: @transaction }
+        end
       else
-        format.html { render :new }
-        format.json { render json: @transaction.errors, status: :unprocessable_entity }
+        format.html { render :new, error: svc.error_messages }
+      end
+    else
+      @transaction = Transaction.new(transaction_params)
+
+      respond_to do |format|
+        if @transaction.save
+          format.html { redirect_to @transaction, notice: 'Transaction was successfully created.' }
+        else
+          format.html { render :new }
+        end
       end
     end
   end
 
   # PATCH/PUT /transactions/1
-  # PATCH/PUT /transactions/1.json
   def update
     respond_to do |format|
       if @transaction.update(transaction_params)
@@ -52,7 +57,6 @@ class TransactionsController < ApplicationController
   end
 
   # DELETE /transactions/1
-  # DELETE /transactions/1.json
   def destroy
     @transaction.destroy
     respond_to do |format|
@@ -65,6 +69,10 @@ class TransactionsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_transaction
       @transaction = Transaction.find(params[:id])
+    end
+
+    def bulk_upload?
+      !params[:transaction][:file].empty?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
