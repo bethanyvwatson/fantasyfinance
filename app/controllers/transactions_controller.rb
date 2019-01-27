@@ -22,23 +22,16 @@ class TransactionsController < ApplicationController
 
   # POST /transactions
   def create
-    if bulk_upload?
-      svc = TransactionImportService.new(params[:file].path)
-      if svc.valid_file?
+    svc = TransactionsImportService.new(transaction_params[:file].path, current_profile.id)
+
+    if svc.valid_file?
+      respond_to do |format|
         svc.create_many
-        format.html { render :index, notice: "Successfully created #{svc.imported_count} transactions out of #{svc.total_count}."}
-      else
-        format.html { render :new, error: svc.error_messages }
+        format.html { redirect_to transactions_path, notice: "Successfully created #{svc.imported_count} transactions out of #{svc.total_count}."}
       end
     else
-      @transaction = Transaction.new(transaction_params)
-
       respond_to do |format|
-        if @transaction.save
-          format.html { redirect_to @transaction, notice: 'Transaction was successfully created.' }
-        else
-          format.html { render :new }
-        end
+        format.html { redirect_to new_transaction_path, error: svc.error_messages }
       end
     end
   end
@@ -47,11 +40,9 @@ class TransactionsController < ApplicationController
   def update
     respond_to do |format|
       if @transaction.update(transaction_params)
-        format.html { redirect_to @transaction, notice: 'Transaction was successfully updated.' }
-        format.json { render :show, status: :ok, location: @transaction }
+        format.html { redirect_to transactions_path, notice: 'Transaction was successfully updated.' }
       else
-        format.html { render :edit }
-        format.json { render json: @transaction.errors, status: :unprocessable_entity }
+        format.html { render :edit, error: @transaction.errors }
       end
     end
   end
@@ -71,12 +62,8 @@ class TransactionsController < ApplicationController
       @transaction = Transaction.find(params[:id])
     end
 
-    def bulk_upload?
-      !params[:transaction][:file].empty?
-    end
-
     # Never trust parameters from the scary internet, only allow the white list through.
     def transaction_params
-      params.require(:transaction).permit(:amount, :description, :date)
+      params.require(:transaction).permit(:amount, :description, :date, :file)
     end
 end
