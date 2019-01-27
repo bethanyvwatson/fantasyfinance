@@ -1,0 +1,5 @@
+<%- if profile_signed_in? %>
+  <%= button_to 'Logout', destroy_profile_session_path, method: :delete %>
+<%else%>
+  <%= button_to 'Login', new_profile_session_path %>
+<%end%>

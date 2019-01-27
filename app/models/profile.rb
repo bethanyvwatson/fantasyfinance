@@ -10,7 +10,16 @@ class Profile < ApplicationRecord
 
   has_many :transactions
 
+
+  def authenticatable_salt
+    "#{super}#{session_token}"
+  end
+
   def full_name
     "#{first_name} #{last_name}"
+  end
+
+  def invalidate_session!
+    self.session_token = SecureRandom.hex
   end
 end
