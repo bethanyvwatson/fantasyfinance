@@ -1,4 +1,5 @@
 class TransactionsController < ApplicationController
+  before_action :authenticate_profile!
   before_action :set_transaction, only: [:show, :edit, :update, :destroy]
 
   # GET /transactions
@@ -12,7 +13,7 @@ class TransactionsController < ApplicationController
 
   # GET /transactions/new
   def new
-    @transaction = Transaction.new
+    @transaction = Transaction.new(transaction_params)
   end
 
   # GET /transactions/1/edit
@@ -24,9 +25,8 @@ class TransactionsController < ApplicationController
     if bulk_upload?
       svc = TransactionImportService.new(params[:file].path)
       if svc.valid_file?
-        svc.data.each do |transaction|
-
-        end
+        svc.create_many
+        format.html { render :index, notice: "Successfully created #{svc.imported_count} transactions out of #{svc.total_count}."}
       else
         format.html { render :new, error: svc.error_messages }
       end
