@@ -1,5 +1,6 @@
 import 'bootstrap'
 import './src/application.scss'
+import {} from 'jquery-ujs'
 
 /* eslint no-console:0 */
 // This file is automatically compiled by Webpack, along with any other files
@@ -13,5 +14,4 @@ import './src/application.scss'
 //= require_tree .
 //= require jquery
 //= require jquery_ujs
-
 console.log('Hello World from Webpacker');
