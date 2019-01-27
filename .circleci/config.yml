@@ -9,12 +9,12 @@ jobs: # a collection of steps
           BUNDLE_RETRY: 3
           BUNDLE_PATH: vendor/bundle
           PGHOST: 127.0.0.1
-          PGUSER: circleci-fantasy-finance
+          PGUSER: root
           RAILS_ENV: test
       - image: circleci/postgres:9.5-alpine # database image
         environment: # environment variables for database
-          POSTGRES_USER: circleci-fantasy-finance
-          POSTGRES_DB: fantasy_finance
+          POSTGRES_USER: root
+          POSTGRES_DB: finance_test
           POSTGRES_PASSWORD: ""
     steps: # a collection of executable commands
       - checkout # special step to check out source code to working directory
@@ -42,11 +42,20 @@ jobs: # a collection of steps
           name: Bundle Install
           command: bundle check || bundle install
 
+      - run: sudo apt install -y postgresql-client || true
+
+
       # Store bundle cache for Ruby dependencies
       - save_cache:
           key: fantasy-finance-bundle-v2-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
+
+      - run:
+          name: Database Setup
+          command: |
+            bundle exec rake db:create
+            bundle exec rake db:structure:load
 
       # Only necessary if app uses webpacker or yarn in some other way
       - restore_cache:
