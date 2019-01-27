@@ -3,4 +3,6 @@ class Transaction < ApplicationRecord
   validates :amount, presence: true
   validates :date, presence: true
   validates :description, presence: true
+
+  belongs_to :profile
 end
