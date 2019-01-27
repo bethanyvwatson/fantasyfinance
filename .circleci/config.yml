@@ -51,12 +51,6 @@ jobs: # a collection of steps
           paths:
             - vendor/bundle
 
-      - run:
-          name: Database Setup
-          command: |
-            bundle exec rake db:create
-            bundle exec rake db:structure:load
-
       # Only necessary if app uses webpacker or yarn in some other way
       - restore_cache:
           keys:
