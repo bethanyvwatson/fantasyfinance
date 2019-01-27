@@ -1,1 +1,5 @@
 <h1>Welcome, <%= @profile.full_name %>!</h1>
+<%= link_to 'Import Transactions', new_transaction_path %>
+
+
+<%= render "/transactions/table", transactions: @profile.transactions.limit(10) %>

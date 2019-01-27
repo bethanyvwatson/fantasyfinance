@@ -3,16 +3,21 @@ require 'csv'
 class TransactionsImportService
   REQ_H = Transaction::REQUIRED_ATTRS
 
-  def initialize(filename)
+  attr_reader :imported_count, :total_count
+
+  def initialize(filename, profile_id)
     @filename = filename
+    @profile_id = profile_id
     @csv = CSV.table(@filename, headers: true)
+    @imported_count = 0
+    @total_count = @csv.size
     @errors = []
     @errors << ArgumentError.new(argument_error_message) unless valid_headers?
   end
 
   def create_many
+    raise ArgumentError if imported_count > 0
     @csv.each_with_index do |row, num|
-      byebug
       create(row, num)
     end
   end
@@ -40,13 +45,14 @@ ERROR
     attrs = {
       amount: row[:amount],
       date: Date::strptime(row[:date], '%m/%d/%y'),
-      description: row[:description]
+      description: row[:description],
+      profile_id: @profile_id
     }
-    byebug
+
+    @imported_count += 1
     tranx = Transaction.new(attrs)
-    if tranx.valid? && tranx.save!
-      # record created
-    else
+    unless tranx.valid? && tranx.save!
+      @imported_count -= 1
       @errors << "Line #{num}: #{tranx.errors.full_messages}"
     end
   end
