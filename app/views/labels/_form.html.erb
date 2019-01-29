@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-lg-5 col-sm-3">
+    <%= form_with(model: label, local: true, html: { class: 'form' }) do |form| %>
+      <% if label.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(label.errors.count, "error") %> prohibited this label from being saved:</h2>
+
+          <ul>
+          <% label.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="field form-group">
+        <%= form.label :name %>
+        <%= form.text_field :name, class: "form-control", required: true %>
+      </div>
+
+      <div class="actions btn-group-sm">
+        <%- if label.persisted? %>
+          <%= link_to "Cancel", label_path, class: "btn btn-secondary" %>
+        <%else%>
+          <%= link_to "Cancel", labels_path, class: "btn btn-secondary" %>
+        <%end%>
+        <%= form.submit class: "btn btn-primary"%>
+      </div>
+    <% end %>
+  </div>
+</div>

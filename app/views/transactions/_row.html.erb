@@ -2,7 +2,5 @@
   <td><%= transaction.amount %></td>
   <td><%= transaction.description %></td>
   <td><%= transaction.date %></td>
-  <td><%= button_to 'Show', transaction, { method: :get } %></td>
-  <td><%= button_to 'Edit', edit_transaction_path(transaction), { method: :get } %></td>
-  <td><%= button_to 'Destroy', transaction, { method: :delete , data: { confirm: 'Are you sure?'} } %></td>
+  <%= render "shared/crud_button_cols", resource: transaction
 </tr>

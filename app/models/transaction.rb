@@ -5,4 +5,5 @@ class Transaction < ApplicationRecord
   validates :description, presence: true
 
   belongs_to :profile
+  belongs_to :label
 end

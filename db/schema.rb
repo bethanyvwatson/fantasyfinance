@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_27_152712) do
+ActiveRecord::Schema.define(version: 2019_01_28_003616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "labels", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "profile_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_labels_on_name", unique: true
+  end
 
   create_table "profiles", force: :cascade do |t|
     t.string "first_name", null: false
@@ -37,7 +45,10 @@ ActiveRecord::Schema.define(version: 2019_01_27_152712) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "profile_id"
+    t.bigint "label_id"
   end
 
+  add_foreign_key "labels", "profiles", name: "fk_labels_profiles"
+  add_foreign_key "transactions", "labels", name: "fk_transactions_labels"
   add_foreign_key "transactions", "profiles", name: "fk_transactions_profiles"
 end

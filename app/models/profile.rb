@@ -9,7 +9,7 @@ class Profile < ApplicationRecord
   validates :email, presence: true, uniqueness: true
 
   has_many :transactions
-
+  has_many :labels
 
   def authenticatable_salt
     "#{super}#{session_token}"

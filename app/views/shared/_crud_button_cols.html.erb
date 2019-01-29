@@ -1,0 +1,3 @@
+<td><%= button_to "Show", resource, { method: :get } %></td>
+<td><%= button_to "Edit", "#{resource.class.to_s.downcase}s/#{resource.id}/edit", { method: :get } %></td>
+<td><%= button_to "Destroy", resource, { method: :delete , data: { confirm: "Are you sure?"} } %></td>
