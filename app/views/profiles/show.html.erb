@@ -1,5 +1,16 @@
 <h1>Welcome, <%= @profile.full_name %>!</h1>
-<%= link_to 'Import Transactions', new_transaction_path %>
 
-
-<%= render "/transactions/table", transactions: @profile.transactions.limit(10) %>
+<div class="row">
+  <div class="col-lg6 col-md-6">
+    <h3>Transactions Preview</h3>
+    <%= render "/shared/table", resource_name: "transaction", resources: @profile.transactions.limit(10) %>
+    <%= link_to 'Import Transactions', new_transaction_path %> |
+    <%= link_to 'All Transactions', transactions_path %>
+  </div>
+  <div class="col-lg6 col-md-6">
+    <h3>Labels Preview</h3>
+    <%= render "/shared/table", resource_name: "label", resources: @profile.labels.limit(10) %>
+    <%= link_to 'Add New Label', new_label_path %> |
+    <%= link_to 'All Labels', labels_path %>
+  </div>
+</div>

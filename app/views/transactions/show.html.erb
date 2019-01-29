@@ -1,19 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Amount:</strong>
-  <%= @transaction.amount %>
-</p>
-
-<p>
-  <strong>Description:</strong>
-  <%= @transaction.description %>
-</p>
-
-<p>
-  <strong>Date:</strong>
-  <%= @transaction.date %>
-</p>
+<%= render "attrs", transaction: @transaction %>
 
 <%= link_to 'Edit', edit_transaction_path(@transaction) %> |
 <%= link_to 'Back', transactions_path %>

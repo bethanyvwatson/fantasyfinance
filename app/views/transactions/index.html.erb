@@ -1,4 +1,4 @@
 <p id="notice"><%= notice %></p>
 <h1>Transactions</h1>
-<%= render "shared/table", resource_name: "transaction", resources: @transactions %>
+<%= render "/shared/table", resource_name: "transaction", resources: @transactions %>
 <%= link_to 'Import Transactions', new_transaction_path %>

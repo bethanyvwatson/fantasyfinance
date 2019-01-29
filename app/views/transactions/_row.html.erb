@@ -1,6 +1,8 @@
+<%- transaction = resource %>
 <tr>
   <td><%= transaction.amount %></td>
+  <td><%= transaction.label&.name || "" %></td>
   <td><%= transaction.description %></td>
-  <td><%= transaction.date %></td>
-  <%= render "shared/crud_button_cols", resource: transaction
+  <td><%= transaction.date.strftime("%x") %></td>
+  <%= render "shared/crud_button_cols", resource: transaction %>
 </tr>
